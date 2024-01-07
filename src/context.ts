@@ -1,8 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { IncomingMessage } from "http";
-import { decodeAuthHeader, AuthTokenPayload } from "./utils/auth";
-// import { Request } from "express";
-// import { ApolloServer, BaseContext } from "@apollo/server";
+import { decodeAuthHeader } from "./utils/auth";
 
 export const prisma = new PrismaClient();
 
@@ -18,7 +16,7 @@ export const serverContext = async ({ req }: { req: IncomingMessage }) => {
 
     return {
         prisma: new PrismaClient(),
-        userId: token?.userId, 
+        userId: token?.userId,
     }
 
 }
