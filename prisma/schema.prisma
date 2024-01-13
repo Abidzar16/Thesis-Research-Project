@@ -7,12 +7,13 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URI")
 }
 
 model Link {
   id          Int      @id @default(autoincrement()) 
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
   description String
   url         String
   postedBy    User?    @relation(name: "PostedBy", fields: [postedById], references: [id])

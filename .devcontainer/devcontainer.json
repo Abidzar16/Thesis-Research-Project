@@ -7,10 +7,9 @@
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	"features": {
 		"ghcr.io/devcontainers/features/git:1": {},
-		"ghcr.io/devcontainers-contrib/features/prisma:2": {},
-		"ghcr.io/devcontainers-contrib/features/redis-homebrew:1": {}
+		"ghcr.io/devcontainers-contrib/features/prisma:2": {}
 	},
-	"forwardPorts": [3000, 5432, 6379]
+	"forwardPorts": [3000, 5432]
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},

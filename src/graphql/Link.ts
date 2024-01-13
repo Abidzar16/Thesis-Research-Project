@@ -50,7 +50,24 @@ export const Feed = objectType({
     },
 });
 
-export const LinkQuery = extendType({
+// export const LinkQuery = extendType({
+//     type: "Query",
+//     definition(t) { // fetch single Link by query
+//         t.nonNull.field("link", {
+//             type: "Link",
+//             args: {
+//                 id: nonNull(intArg()),
+//             },
+//             resolve(_parent, args, context) {
+//                 return context.prisma.link.findUnique({
+//                     where: { id: args.id as number },
+//                 });
+//             },
+//         });
+//     },
+// });
+
+export const FeedQuery = extendType({
     type: "Query",
     definition(t) {
         t.nonNull.field("feed", {
@@ -93,7 +110,7 @@ export const LinkQuery = extendType({
     },
 });
 
-export const LinkMutation = extendType({
+export const PostMutation = extendType({
     type: "Mutation",
     definition(t) {
         t.nonNull.field("post", {

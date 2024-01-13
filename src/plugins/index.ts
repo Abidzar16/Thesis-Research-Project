@@ -12,7 +12,7 @@
 
 // import { serverContext, Context } from "../context";
 
-export * from "./cachePlugin";
+export * from "./cache/cachePlugin";
 
 // export class CustomApolloServerPlugin implements ApolloServerPlugin<Context> {
 //   public serverWillStart(): any {
