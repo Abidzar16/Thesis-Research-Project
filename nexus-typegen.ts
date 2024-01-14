@@ -59,10 +59,15 @@ export interface NexusGenObjects {
     id?: string | null; // ID
     links: NexusGenRootTypes['Link'][]; // [Link!]!
   }
+  GeneralMessage: { // root type
+    message: string; // String!
+  }
   Link: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
     id: number; // Int!
+    isDeleted: boolean; // Boolean!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
   }
   Mutation: {};
@@ -98,15 +103,21 @@ export interface NexusGenFieldTypes {
     id: string | null; // ID
     links: NexusGenRootTypes['Link'][]; // [Link!]!
   }
+  GeneralMessage: { // field return type
+    message: string; // String!
+  }
   Link: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
     id: number; // Int!
+    isDeleted: boolean; // Boolean!
     postedBy: NexusGenRootTypes['User'] | null; // User
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
     voters: NexusGenRootTypes['User'][]; // [User!]!
   }
   Mutation: { // field return type
+    delete: NexusGenRootTypes['GeneralMessage']; // GeneralMessage!
     login: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     post: NexusGenRootTypes['Link']; // Link!
     signup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
@@ -114,6 +125,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     feed: NexusGenRootTypes['Feed']; // Feed!
+    link: NexusGenRootTypes['Link']; // Link!
   }
   User: { // field return type
     email: string; // String!
@@ -138,15 +150,21 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     links: 'Link'
   }
+  GeneralMessage: { // field return type name
+    message: 'String'
+  }
   Link: { // field return type name
     createdAt: 'DateTime'
     description: 'String'
     id: 'Int'
+    isDeleted: 'Boolean'
     postedBy: 'User'
+    updatedAt: 'DateTime'
     url: 'String'
     voters: 'User'
   }
   Mutation: { // field return type name
+    delete: 'GeneralMessage'
     login: 'AuthPayload'
     post: 'Link'
     signup: 'AuthPayload'
@@ -154,6 +172,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     feed: 'Feed'
+    link: 'Link'
   }
   User: { // field return type name
     email: 'String'
@@ -170,6 +189,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    delete: { // args
+      id: number; // Int!
+    }
     login: { // args
       email: string; // String!
       password: string; // String!
@@ -193,6 +215,9 @@ export interface NexusGenArgTypes {
       orderBy?: NexusGenInputs['LinkOrderByInput'][] | null; // [LinkOrderByInput!]
       skip?: number | null; // Int
       take?: number | null; // Int
+    }
+    link: { // args
+      id: number; // Int!
     }
   }
 }

@@ -18,11 +18,17 @@ type Feed {
   links: [Link!]!
 }
 
+type GeneralMessage {
+  message: String!
+}
+
 type Link {
   createdAt: DateTime!
   description: String!
   id: Int!
+  isDeleted: Boolean!
   postedBy: User
+  updatedAt: DateTime!
   url: String!
   voters: [User!]!
 }
@@ -34,6 +40,7 @@ input LinkOrderByInput {
 }
 
 type Mutation {
+  delete(id: Int!): GeneralMessage!
   login(email: String!, password: String!): AuthPayload!
   post(description: String!, url: String!): Link!
   signup(email: String!, name: String!, password: String!): AuthPayload!
@@ -42,6 +49,7 @@ type Mutation {
 
 type Query {
   feed(filter: String, orderBy: [LinkOrderByInput!], skip: Int, take: Int): Feed!
+  link(id: Int!): Link!
 }
 
 enum Sort {

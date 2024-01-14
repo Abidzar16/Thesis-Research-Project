@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Link {
-  id          Int      @id @default(autoincrement()) 
+  id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   description String
@@ -19,6 +19,7 @@ model Link {
   postedBy    User?    @relation(name: "PostedBy", fields: [postedById], references: [id])
   postedById  Int?
   voters      User[]   @relation(name: "Votes")
+  isDeleted   Boolean  @default(false)
 }
 
 model User {
