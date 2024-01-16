@@ -121,6 +121,7 @@ export interface NexusGenFieldTypes {
     login: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     post: NexusGenRootTypes['Link']; // Link!
     signup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
+    update: NexusGenRootTypes['Link']; // Link!
     vote: NexusGenRootTypes['Vote'] | null; // Vote
   }
   Query: { // field return type
@@ -168,6 +169,7 @@ export interface NexusGenFieldTypeNames {
     login: 'AuthPayload'
     post: 'Link'
     signup: 'AuthPayload'
+    update: 'Link'
     vote: 'Vote'
   }
   Query: { // field return type name
@@ -204,6 +206,11 @@ export interface NexusGenArgTypes {
       email: string; // String!
       name: string; // String!
       password: string; // String!
+    }
+    update: { // args
+      description?: string | null; // String
+      id: number; // Int!
+      url?: string | null; // String
     }
     vote: { // args
       linkId: number; // Int!

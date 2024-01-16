@@ -197,3 +197,61 @@ export const DeleteMutation = extendType({
 		});
 	},
 });
+
+export const UpdateMutation = extendType({
+	type: "Mutation",
+	definition(t) {
+		t.nonNull.field("update", {
+			type: "Link",
+			args: {
+				id: nonNull(intArg()),
+				description: stringArg(),
+				url: stringArg(),
+			},
+			async resolve(parent, args, context) : Promise<any> {
+				const { userId } = context;
+				const { id, description, url } = args;
+				
+				if (!userId) {  // 1
+					throw new Error("Cannot update without logging in.");
+				}
+
+				if (!description && !url) {  // 1
+					throw new Error("Cannot update without empty description and url.");
+				}
+				
+				try {
+					const content = await context.prisma.link.findUnique({
+						where: {
+							id: id,
+							postedById: userId, // Ensure the user owns the content
+						},
+						select: { description: true, url: true },
+					});
+			
+					if (!content) {
+						throw new Error(`Content not found or you don't have permission to update it.`);
+					}
+			
+					// If content exists and belongs to the user, proceed with deletion
+					const updatedLink = await context.prisma.link.update({
+						where: {
+							id: id,
+							postedById: userId,
+						},
+						data: {
+							description: description || content.description,
+							url: url || content.url,
+							updatedAt: new Date(),
+						},
+					});
+
+					return updatedLink
+			
+				} catch (error) {
+					throw new Error('Failed to update content.'); // Re-throw for error handling in your application
+				}
+			},
+		});
+	},
+});
