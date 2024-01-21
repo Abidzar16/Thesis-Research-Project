@@ -16,15 +16,15 @@ export async function setCacheWithNamespaceAndExpire(
   key: string,
   value: any,
   namespace: string,
-  expireSeconds?: number,
+  expireMiliseconds?: number,
   id?: any
 ): Promise<void> {
   const fullKey = id ? `${namespace}:${id}:${key}` : `${namespace}:${key}`;
-  if (!expireSeconds) {
+  if (!expireMiliseconds) {
     await client.set(fullKey, JSON.stringify(value));
     return;
   } else {
-    await client.set(fullKey, JSON.stringify(value), "EX", expireSeconds);
+    await client.set(fullKey, JSON.stringify(value), "PX", expireMiliseconds);
   }
   return;
 }
