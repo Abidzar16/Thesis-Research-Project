@@ -1,15 +1,6 @@
 import {
-    extendType,
-    nonNull,
-    objectType,
-    stringArg,
-    intArg,
-    inputObjectType,
-    enumType,
-    arg,
-    list,
+    objectType
 } from "nexus";
-import { Prisma } from "@prisma/client";
 
 
 export const User = objectType({

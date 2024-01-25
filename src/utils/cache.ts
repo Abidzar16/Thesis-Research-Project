@@ -1,16 +1,16 @@
-// import { createClient } from 'redis';
-import Redis from 'ioredis';
+import { createClient } from 'redis';
 import * as dotenv from "dotenv";
-import { DocumentNode, graphql, } from 'graphql';
+import { DocumentNode } from 'graphql';
 import { visit } from 'graphql';
-import { StringValueNode } from 'graphql';
-import { parse } from 'path';
 
 dotenv.config();
 
 const Redis_URI = process.env.REDIS_URI || ""
 
-const client = new Redis(Redis_URI);
+// const client = new Redis(Redis_URI);
+const client = await createClient({url: Redis_URI})
+                  .on('error', err => console.log('Redis Client Error', err))
+                  .connect();
 
 export async function setCacheWithNamespaceAndExpire(
   key: string,
@@ -24,7 +24,9 @@ export async function setCacheWithNamespaceAndExpire(
     await client.set(fullKey, JSON.stringify(value));
     return;
   } else {
-    await client.set(fullKey, JSON.stringify(value), "PX", expireMiliseconds);
+    await client.set(fullKey, JSON.stringify(value), {
+      PX: expireMiliseconds
+    });
   }
   return;
 }
@@ -46,20 +48,10 @@ export async function deleteCacheByNamespace(
 
   // Invalidate all cache with the namespace
   const key = id ? `${namespace}:${id}:*` : `${namespace}:*`;
-  var stream = client.scanStream({
-    match: key,
-  });
-  stream.on('data', function (keys: string[]) {
-    // `keys` is an array of strings representing key names
-    if (keys.length) {
-      var pipeline = client.pipeline();
-      keys.forEach(function (key: string) {
-        pipeline.del(key);
-      });
-      pipeline.exec();
-    }
-  });
-  stream.on('end', function () {});
+  const keys = await client.scanIterator({ MATCH: key });
+  for await (const key of keys) {
+    client.del(key);
+  }
   
   return;
 }

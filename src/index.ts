@@ -1,6 +1,5 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from '@apollo/server/standalone';
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { PrismaClient } from "@prisma/client";
 import { schema } from "./schema";
 import { serverContext, Context } from "./context";
@@ -12,7 +11,7 @@ export const prisma = new PrismaClient();
 export const server = new ApolloServer<Context>({
     schema,
     introspection: true,
-    plugins: [new CustomCachePlugin()] // NEW
+    plugins: [new CustomCachePlugin()]
 });
 
 const { url } = await startStandaloneServer(server, {
