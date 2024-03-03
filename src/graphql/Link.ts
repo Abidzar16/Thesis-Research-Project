@@ -105,7 +105,10 @@ export const FeedQuery = extendType({
       : {};
       
       const links = await context.prisma.link.findMany({
-        where,
+        where: {
+          ...where,
+          isDeleted: false
+        },
         skip: args?.skip as number | undefined,
         take: args?.take as number | undefined,
         orderBy: args?.orderBy as

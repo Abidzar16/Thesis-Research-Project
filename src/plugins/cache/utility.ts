@@ -1,13 +1,10 @@
-import { createClient } from 'redis';
 import * as dotenv from "dotenv";
-import { DocumentNode } from 'graphql';
-import { visit } from 'graphql';
+import { createClient } from 'redis';
 
 dotenv.config();
 
 const Redis_URI = process.env.REDIS_URI || ""
 
-// const client = new Redis(Redis_URI);
 const client = await createClient({url: Redis_URI})
                   .on('error', err => console.log('Redis Client Error', err))
                   .connect();
@@ -54,37 +51,4 @@ export async function deleteCacheByNamespace(
   }
   
   return;
-}
-
-// extract processed arguments in form of dictionary from combining
-// GraphQL request document and variabes
-// if any of arguments' value is variable, replace it with the value from variabes
-export function fetchArguments(
-  document: DocumentNode,
-  variables: { [key: string]: any }
-): { [key: string]: any } {
-  
-  const args: { [key: string]: any } = {};
-  visit(document, {
-    Argument(node) {
-      const name = node.name.value;
-
-      if (node.value.kind === 'Variable'){
-        args[name] = variables[node.value.name.value];
-      } else if (node.value.kind === 'NullValue') {
-        args[name] = null;
-      } else if (node.value.kind === 'ListValue') {
-        args[name] = node.value.values;
-      } else if (node.value.kind === 'ObjectValue') {
-        args[name] = node.value.fields;
-      } else if (node.value.kind === 'IntValue') {
-        args[name] = parseInt(node.value.value);
-      } else if (node.value.kind === 'FloatValue') {
-        args[name] = parseFloat(node.value.value);
-      } else {
-        args[name] = node.value.value;
-      }
-    },
-  });
-  return args;
 }

@@ -1,5 +1,5 @@
-import { objectType, extendType, nonNull, intArg } from "nexus";
 import { User } from "@prisma/client";
+import { extendType, intArg, nonNull, objectType } from "nexus";
 
 export const Vote = objectType({
     name: "Vote",

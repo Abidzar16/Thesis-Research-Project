@@ -10,7 +10,6 @@ export const prisma = new PrismaClient();
 
 export const server = new ApolloServer<Context>({
     schema,
-    introspection: true,
     plugins: [new CustomCachePlugin()]
 });
 
