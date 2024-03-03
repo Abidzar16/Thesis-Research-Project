@@ -28,7 +28,7 @@ const ruleList : {[key: string]: Configuration} = {
     timeToLive: 600000, // 10 minute
     uniqueIdentifier: "id",
     mutation: {
-      "delete": "id",
+      "vote": "linkId",
     }
   }
 }

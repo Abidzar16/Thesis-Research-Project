@@ -7,9 +7,9 @@ import {
 
 import * as dotenv from "dotenv";
 import { DocumentNode, visit } from 'graphql';
-import { Configuration, rules } from './configuration';
 import { Context } from "../../context";
-import { getCacheWithNamespace, setCacheWithNamespaceAndExpire, deleteCacheByNamespace } from "./utility";
+import { Configuration, rules } from './configuration';
+import { deleteCacheByNamespace, getCacheWithNamespace, setCacheWithNamespaceAndExpire } from "./utility";
 
 dotenv.config();
 
@@ -127,6 +127,10 @@ export class CustomCachePlugin implements ApolloServerPlugin<Context> {
         var resolver: String = "";
         var operationType: String = "";
 
+        if (requestContext.errors) {
+          return
+        }
+
         if (request.operationName != "IntrospectionQuery"){
           const firstDefinition : any = document?.definitions[0] || {} // Assuming you want the first element
           operationType = firstDefinition?.operation || ""
@@ -136,7 +140,7 @@ export class CustomCachePlugin implements ApolloServerPlugin<Context> {
         }
 
         if (response?.body?.kind === 'single' && 'data' in response.body.singleResult) {
-          data = await response.body.singleResult.data
+          var data = await response.body.singleResult.data
           if (data === null || data === undefined) {
             return
           }
@@ -151,8 +155,6 @@ export class CustomCachePlugin implements ApolloServerPlugin<Context> {
             const key = `${JSON.stringify({query, variables})}`;
             const uniqueIdentifier = selectedTrigger.uniqueIdentifier || null;
             const timeToLive = selectedTrigger.timeToLive || undefined;
-            var data : any = null;
-
             if (singleResultCache){
               const id = argumentList[uniqueIdentifier as string];
               await setCacheWithNamespaceAndExpire(key, data, resolver as string, timeToLive, id)
@@ -170,23 +172,19 @@ export class CustomCachePlugin implements ApolloServerPlugin<Context> {
           for (const queryKey in rules) {
             const mutationInvalidator: { [key: string]: String | null } = rules[queryKey].mutation || {};
             const argument = mutationInvalidator[resolver as string];
+            console.info(queryKey, argument, resolver, mutationInvalidator);
             if (argument) {
               await deleteCacheByNamespace(queryKey, argumentList[argument as string]);
             } else {
               if (resolver as string in mutationInvalidator) {
                 await deleteCacheByNamespace(queryKey);
-              } else {
-                return
               }
             }
           }
+          return
         }
         return
       },
-
-      didEncounterErrors(requestContext: GraphQLRequestContext<Context>) {
-        console.info(requestContext.errors)
-      }
     }
   }
 }
